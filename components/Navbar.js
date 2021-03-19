@@ -14,7 +14,7 @@ const Navbar = () => {
             Docs
           </a>
         </Link>
-        <button className="py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-300 transition duration-200">
+        <button className="py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200">
           Connect Wallet
         </button>
       </div>

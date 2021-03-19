@@ -4,7 +4,7 @@ import Card from "../components/Card";
 
 const Home = () => {
   return (
-    <div>
+    <div className="relative pb-96">
       <Navbar />
       <div className="container mx-auto">
         <div className="w-8/12 mb-48">
