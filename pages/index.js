@@ -1,12 +1,8 @@
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Card from "../components/Card";
-import { useEagerConnect } from "../hooks";
 
 const Home = () => {
-
-  useEagerConnect();
-
   return (
     <div className="relative pb-96">
       <Navbar />
