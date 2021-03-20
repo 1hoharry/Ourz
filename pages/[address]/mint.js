@@ -1,15 +1,26 @@
+import { useState } from "react";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
+import { useRouter } from "next/router";
+import axios from "axios";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import Error from "../../components/Error";
 import Dropzone from "../../components/Dropzone";
 
 const Mint = () => {
+  const router = useRouter();
+  const { address } = router.query;
   const { control, register, watch, handleSubmit, errors } = useForm();
   const { fields, append, remove } = useFieldArray({ control, name: "input" });
   const watchMedia = watch("media");
 
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = async (data) => {
+    console.log(data);
+    console.log(router.query);
+    await axios.post(`/api/${address}`, {
+      data,
+    });
+  };
   const onAppend = () => append({ collaborator: "", shares: "" });
 
   return (
