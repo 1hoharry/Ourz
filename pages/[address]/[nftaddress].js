@@ -6,6 +6,7 @@ import Footer from "../../components/Footer";
 const ViewNFT = () => {
   const router = useRouter();
   const { address } = router.query;
+
   return (
     <div className="relative pb-96">
       <Navbar />

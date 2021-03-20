@@ -1,7 +1,10 @@
 import Link from "next/link";
+import { useWeb3React } from "@web3-react/core";
 import Wallet from "./Wallet";
 
 const Navbar = () => {
+  const { account, active } = useWeb3React();
+
   return (
     <div className="container flex justify-between items-center p-5 mx-auto border-b">
       <Link href="/">
@@ -9,12 +12,12 @@ const Navbar = () => {
           Ourz
         </a>
       </Link>
-      <div className="flex items-center">
-        <Link href="/">
-          <a className="font-bold mr-10 hover:text-gray-500 transition duration-200">
-            Docs
-          </a>
+      {active && (
+        <Link href={`/${account}`}>
+          <a className="font-bold text-2xl text-center">your NFTs</a>
         </Link>
+      )}
+      <div className="flex items-center">
         <Wallet />
       </div>
     </div>

@@ -1,8 +1,8 @@
 import { useForm, useFieldArray, Controller } from "react-hook-form";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
-import Error from "../components/Error";
-import Dropzone from "../components/Dropzone";
+import Navbar from "../../components/Navbar";
+import Footer from "../../components/Footer";
+import Error from "../../components/Error";
+import Dropzone from "../../components/Dropzone";
 
 const Mint = () => {
   const { control, register, watch, handleSubmit, errors } = useForm();
