@@ -1,22 +1,16 @@
-import { useForm, useFieldArray } from "react-hook-form";
-import { useDropzone } from "react-dropzone";
+import { useForm, useFieldArray, Controller } from "react-hook-form";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import Error from "../components/Error";
+import Dropzone from "./../components/Dropzone";
 
 const Form = () => {
-  const { control, register, handleSubmit, errors } = useForm();
+  const { control, register, watch, handleSubmit, errors } = useForm();
   const { fields, append, remove } = useFieldArray({ control, name: "input" });
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
-    maxFiles: 1,
-  });
+  const watchMedia = watch("media");
 
   const onSubmit = (data) => console.log(data);
   const onAppend = () => append({ collaborator: "", shares: "" });
-  const files = acceptedFiles.map((file) => (
-    <li key={file.path}>
-      {file.path} - {file.size} bytes
-    </li>
-  ));
 
   return (
     <div className="relative pb-96">
@@ -25,20 +19,15 @@ const Form = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <section className="p-6 border rounded">
             <h3 className="font-bold text-2xl">Mint your NFT</h3>
-            <div
-              {...getRootProps({
-                className:
-                  "dropzone mt-5 p-12 bg-gray-100 border-2 border-dashed border-gray-300 text-center",
-              })}
-            >
-              <input {...getInputProps()} />
-              <p className="text-gray-400">
-                Drag and drop media content, or click to select.
-              </p>
-            </div>
-            <aside className="mt-5">
-              <ul>{files}</ul>
-            </aside>
+            <Controller
+              control={control}
+              defaultValue={""}
+              name="media"
+              rules={{ required: true }}
+              render={({ onChange }) => <Dropzone onChange={onChange} />}
+            />
+            {errors.media && <Error>Media is required.</Error>}
+            <aside className="mt-5">{watchMedia && <p>{watchMedia}</p>}</aside>
             <div className="mt-5">
               <label htmlFor="name" className="block font-bold">
                 Name
@@ -47,9 +36,10 @@ const Form = () => {
                 type="text"
                 id="name"
                 name="name"
-                ref={register}
-                className="w-1/3 mt-2 p-3 border rounded border-gray-300 shadow"
+                ref={register({ required: true })}
+                className="w-full mt-2 p-3 border rounded border-gray-300 shadow"
               />
+              {errors.name && <Error>Name field is required.</Error>}
             </div>
             <div className="mt-10">
               <label htmlFor="description" className="block font-bold">
@@ -58,9 +48,12 @@ const Form = () => {
               <textarea
                 id="description"
                 name="description"
-                ref={register}
-                className="w-1/3 mt-2 p-3 border rounded border-gray-300 shadow"
+                ref={register({ required: true })}
+                className="w-full mt-2 p-3 border rounded border-gray-300 shadow"
               />
+              {errors.description && (
+                <Error>Description field is required.</Error>
+              )}
             </div>
           </section>
 
@@ -75,14 +68,14 @@ const Form = () => {
                 <li key={item.id} className="space-x-5 space-y-10">
                   <input
                     name={`input[${index}].collaborator`}
-                    ref={register()}
+                    ref={register({ required: true })}
                     defaultValue={item.collaborator}
                     placeholder="Collaborator"
                     className="w-1/3 p-3 border rounded border-gray-300 shadow"
                   />
                   <input
                     name={`input[${index}].shares`}
-                    ref={register()}
+                    ref={register({ required: true })}
                     defaultValue={item.shares}
                     placeholder="Shares"
                     className="w-1/3 p-3 border rounded border-gray-300 shadow"
