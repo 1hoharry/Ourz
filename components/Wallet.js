@@ -20,7 +20,7 @@ const Wallet = () => {
     <div>
       <Link href={`/${account}/mint`}>
         <a className="mr-10 py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200">
-          Mint
+          Create
         </a>
       </Link>
       <button
