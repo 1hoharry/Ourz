@@ -3,7 +3,7 @@ pragma solidity >=0.6.0 <0.8.0;
 import "@openzeppelin/contracts/payment/PaymentSplitter.sol";
 
 contract OurzPaymentSplitterFactory {
-    OurzPaymentSplitter[] private deployedOurzPaymentSplitters;
+    OurzPaymentSplitter[] public deployedOurzPaymentSplitters;
     mapping(address => OurzPaymentSplitter[]) private allPaymentSplittersOfCollaborator;
 
     function createOurzPaymentSplitter(address[] memory _payees, uint256[] memory _shares) public {
