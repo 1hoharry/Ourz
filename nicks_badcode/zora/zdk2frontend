@@ -1,0 +1,45 @@
+//from discord user ethandaya
+//"for everyone who is working on a Zora react app / frontend this is an example how you might pass the ZDK around inside an  application"
+//"you can swap out the user logic for if there is an active web3 wallet"
+//https://github.com/NoahZinsmeister/web3-react
+const provider = new JsonRpcProvider(NETWORK_URL, NETWORK_CHAIN_ID)
+const defaultZora = new Zora(provider, NETWORK_CHAIN_ID)
+
+export const ZDKContext = createContext<Zora>(defaultZora)
+
+const ZDKProvider: React.FC = ({ children }) => {
+  const { library } = useWeb3()
+  const { user } = useUser()
+  const [zora, setZora] = useState<Zora>(defaultZora)
+
+  useEffect(() => {
+    if (!library) {
+      return
+    }
+
+    const signer = library.getSigner()
+    if (user && library && zora.readOnly) {
+      const authorizedZora = new Zora(signer, NETWORK_CHAIN_ID)
+      setZora(authorizedZora)
+    }
+  }, [library, user, zora])
+
+  useEffect(() => {
+    if (!user && !zora.readOnly) {
+      setZora(defaultZora)
+    }
+  }, [user, zora])
+
+  return <ZDKContext.Provider value={zora}>{children}</ZDKContext.Provider>
+}
+
+export { ZDKProvider }
+
+//how to find wallet and token address on zora
+import { addresses } from '@zoralabs/zdk'
+
+export const MARKET_ADDRESS =
+  NETWORK_CHAIN_ID === 1 ? addresses.mainnet.market : addresses.rinkeby.market
+
+export const MEDIA_ADDRESS =
+  NETWORK_CHAIN_ID === 1 ? addresses.mainnet.media : addresses.rinkeby.media

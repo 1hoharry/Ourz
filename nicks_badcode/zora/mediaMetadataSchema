@@ -1,0 +1,71 @@
+//https://github.com/ourzora/media-metadata-schemas
+//since we will be supporting collaborative artists I feel it is important
+//to include co-creators in metadata
+
+//I suggest adding a "team" string to the existing 4 params Version/Name/Description/MimeType (line41)
+
+{
+    "description": "This schema describes version 20210101 of the Zora Metadata Standard",
+    "title": "Zora20210101",
+    "$id": "http://zora.co/schemas/ZoraMetadata.json",
+    "type": "object",
+    "properties": {
+        "description": {
+            "description": "The description of the media",
+            "examples": [
+                "This paper describes protocol to create, share and exchange universally accessible and valuable information on the internet."
+            ],
+            "type": "string"
+        },
+        "mimeType": {
+            "description": "The mimeType of the media",
+            "examples": [
+                "text/plain"
+            ],
+            "type": "string"
+        },
+        "name": {
+            "description": "This property is the name of the Media",
+            "examples": [
+                "Zora Whitepaper"
+            ],
+            "type": "string"
+        },
+        "version": {
+            "description": "This property defines the calendar version of the schema so that consumers can correctly parse the json",
+            "examples": [
+                "zora-20210101"
+            ],
+            "type": "string"
+        },
+        //add team here
+        "team": {
+            "description": "This property adds credits for all team members to metadata",
+            //ROLE HRN and wA should be pulled from front end when user fills out royalties to co-creators
+            "examples": [
+                "_ROLE_: _HumanReadableName_, _walletAddress_"
+            ],
+            "type": "string"
+    },
+    "additionalProperties": false,
+    "examples": [
+        {
+            "version": "zora-20210101",
+            "name": "Zora Whitepaper",
+            "description": "This paper describes protocol to create, share and exchange universally accessible and valuable information on the internet.",
+            //not sure how this is supposed to look but I'm guessing like this
+            "team": "Photographer: Nick, 0x... 
+                     Model: Harry, 0x...
+                     Retouching: Aheesh, 0x...
+            "mimeType": "text/plain"
+        }
+    ],
+    "required": [
+        "version",
+        "name",
+        "description",
+        //also need to add this to NFTE app... getContractData=team
+        "team",
+        "mimeType"
+    ]
+}
