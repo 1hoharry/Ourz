@@ -5,8 +5,8 @@ const OurzPaymentSplitterFactory = artifacts.require(
 contract("OurzPaymentSplitterFactory", (accounts) => {
   let factory;
 
-  before(async () => {
-    factory = await OurzPaymentSplitterFactory.deployed();
+  beforeEach(async () => {
+    factory = await OurzPaymentSplitterFactory.new();
   });
 
   it("should be deployed", async () => {
@@ -25,15 +25,35 @@ contract("OurzPaymentSplitterFactory", (accounts) => {
   });
 
   it("should retrieve a list of paymentsplitter contracts for the specified address", async () => {
-    await factory.createOurzPaymentSplitter([accounts[0]], [1]);
+    await factory.createOurzPaymentSplitter(
+      [accounts[0], accounts[1], accounts[2]],
+      [1, 1, 1]
+    );
     const address = await factory.deployedOurzPaymentSplitters(0);
-    const paymentSplitters = await factory.getOurzPaymentSplittersByCollaborator(
+    const paymentSplitters1 = await factory.getOurzPaymentSplittersByCollaborator(
       accounts[0]
+    );
+    const paymentSplitters2 = await factory.getOurzPaymentSplittersByCollaborator(
+      accounts[1]
+    );
+    const paymentSplitters3 = await factory.getOurzPaymentSplittersByCollaborator(
+      accounts[2]
+    );
+
+    assert.equal(
+      address,
+      paymentSplitters1[0],
+      "The list of contracts is incorrect1."
     );
     assert.equal(
       address,
-      paymentSplitters[0],
-      "The list of contracts is incorrect."
+      paymentSplitters2[0],
+      "The list of contracts is incorrect2."
+    );
+    assert.equal(
+      address,
+      paymentSplitters3[0],
+      "The list of contracts is incorrect3."
     );
   });
 });

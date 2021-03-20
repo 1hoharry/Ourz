@@ -12,9 +12,15 @@ const Home = () => {
             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </h1>
-          <h3 className="mt-5 font-bold text-xl text-gray-500">Rhoncus urna neque viverra justo nec ultrices.</h3>
+          <h3 className="mt-5 font-bold text-xl text-gray-500">
+            Rhoncus urna neque viverra justo nec ultrices.
+          </h3>
         </div>
-        <Card header="$1.3B+" text="Invested through our platform" add="Since May 2020" />
+        <Card
+          header="$1.3B+"
+          text="Invested through our platform"
+          add="Since May 2020"
+        />
       </div>
       <Footer />
     </div>
