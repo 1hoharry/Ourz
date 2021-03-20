@@ -2,9 +2,9 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import Error from "../components/Error";
-import Dropzone from "./../components/Dropzone";
+import Dropzone from "../components/Dropzone";
 
-const Form = () => {
+const Mint = () => {
   const { control, register, watch, handleSubmit, errors } = useForm();
   const { fields, append, remove } = useFieldArray({ control, name: "input" });
   const watchMedia = watch("media");
@@ -111,4 +111,4 @@ const Form = () => {
   );
 };
 
-export default Form;
+export default Mint;

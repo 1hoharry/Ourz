@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Wallet from "./Wallet";
 
 const Navbar = () => {
   return (
@@ -8,15 +9,13 @@ const Navbar = () => {
           Ourz
         </a>
       </Link>
-      <div>
+      <div className="flex items-center">
         <Link href="/">
           <a className="font-bold mr-10 hover:text-gray-500 transition duration-200">
             Docs
           </a>
         </Link>
-        <button className="py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200">
-          Connect Wallet
-        </button>
+        <Wallet />
       </div>
     </div>
   );
