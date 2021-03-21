@@ -35,3 +35,5 @@ ethereum/abis
 public
 server/node_modules
 server/.env
+.env
+ethereum/deploy.js
