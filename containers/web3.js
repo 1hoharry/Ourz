@@ -51,8 +51,8 @@ function useWeb3() {
     const address = await signer.getAddress();
     setAddress(address);
 
-    // const zora = new Zora(signer, network.chainId);
-    // setZora(zora);
+    const zora = new Zora(signer, network.chainId);
+    setZora(zora);
   };
 
   const disconnect = async () => {
@@ -77,52 +77,55 @@ function useWeb3() {
   };
 
   const mintMedia = async (media, name, description, royalty, royalties) => {
-    const metadataJSON = generateMetadata("zora-20210101", {
-      description: description,
-      mimeType: media.type,
-      name: name,
-      version: "zora-20210101",
-    });
+    console.log(royalties);
+    // const metadataJSON = generateMetadata("zora-20210101", {
+    //   description: description,
+    //   mimeType: media.type,
+    //   name: name,
+    //   version: "zora-20210101",
+    // });
 
-    const mediaBuffer = await getFileBuffer(media);
+    // const mediaBuffer = await getFileBuffer(media);
 
-    const contentHash = sha256FromBuffer(Buffer.from(mediaBuffer));
-    const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON));
+    // const contentHash = sha256FromBuffer(Buffer.from(mediaBuffer));
+    // const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON));
 
-    let formData = new FormData();
-    formData.append("media", media);
-    formData.append("name", name);
-    formData.append("metadata", metadataJSON);
+    // let formData = new FormData();
+    // formData.append("media", media);
+    // formData.append("name", name);
+    // formData.append("metadata", metadataJSON);
 
-    const upload = await axios.post("/api/upload", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    const { mediaCID, metadataCID } = upload.data;
-    const mediaUrl = `ipfs://${mediaCID}`;
-    const metadataUrl = `ipfs://${metadataCID}`;
+    // const upload = await axios.post("/api/upload", formData, {
+    //   headers: {
+    //     "Content-Type": "multipart/form-data",
+    //   },
+    // });
+    // const { mediaCID, metadataCID } = upload.data;
+    // const mediaUrl = `ipfs://${mediaCID}`;
+    // const metadataUrl = `ipfs://${metadataCID}`;
 
-    const mediaData = constructMediaData(
-      mediaUrl,
-      metadataUrl,
-      contentHash,
-      metadataHash
-    );
+    // const mediaData = constructMediaData(
+    //   mediaUrl,
+    //   metadataUrl,
+    //   contentHash,
+    //   metadataHash
+    // );
 
-    const bidShares = constructBidShares(
-      parseInt(royalty),
-      100 - parseInt(royalty),
-      parseFloat(fee)
-    );
+    // const bidShares = constructBidShares(
+    //   parseInt(royalty),
+    //   100 - parseInt(royalty),
+    //   parseFloat(fee)
+    // );
 
     const factory = await new ethers.Contract(
-      "0x61fd693d11daf48333fe1a9a30ac68936f4257df",
+      "0xbdFBbB1aBA2C5b3C3038219C5FBf70556bcCd300",
       abi,
       provider
     );
 
+    console.log(factory);
 
+    const zora = new Zora(factory, network.chainId);
     // // Make transaction
     // const tx = await zora.mint(mediaData, bidShares);
     // await tx.wait(1); // Wait 1 confirmation and throw user to next screen
