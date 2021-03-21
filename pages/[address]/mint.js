@@ -31,7 +31,7 @@ const Mint = () => {
         data.royalty,
         data.royalties
       );
-      // router.push(`/${address}`);
+      router.push(`/${address}/success`);
     } catch (e) {
       console.log(e);
     }

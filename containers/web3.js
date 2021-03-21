@@ -4,7 +4,9 @@ import {
   sha256FromBuffer,
   generateMetadata,
   constructBidShares,
+  signPermitMessage,
 } from "@zoralabs/zdk";
+import { generatedWallets } from "@zoralabs/core/dist/utils";
 import axios from "axios";
 import Web3Modal from "web3modal";
 import { ethers, providers } from "ethers";
@@ -28,6 +30,7 @@ function useWeb3() {
   const [address, setAddress] = useState(null);
   const [network, setNetwork] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [signer, setSigner] = useState(null);
 
   const setupWeb3Modal = () => {
     const web3Modal = new Web3Modal({
@@ -48,6 +51,7 @@ function useWeb3() {
     const network = await provider.getNetwork();
     setNetwork(network);
     const signer = provider.getSigner();
+    setSigner(signer);
     const address = await signer.getAddress();
     setAddress(address);
 
@@ -76,60 +80,100 @@ function useWeb3() {
     });
   };
 
+  const createEipSig = async (contract) => {
+    // const [wallet] = generatedWallets(provider);
+    const [wallet] = generatedWallets(contract);
+    const deadline = Math.floor(new Date().getTime() / 1000) + 60 * 60 * 24;
+    const domain = zora.eip712Domain();
+    const eipSig = await signPermitMessage(
+      wallet,
+      address,
+      0,
+      0,
+      deadline,
+      domain
+    );
+    return eipSig;
+  };
+
   const mintMedia = async (media, name, description, royalty, royalties) => {
     console.log(royalties);
-    // const metadataJSON = generateMetadata("zora-20210101", {
-    //   description: description,
-    //   mimeType: media.type,
-    //   name: name,
-    //   version: "zora-20210101",
-    // });
+    const metadataJSON = generateMetadata("zora-20210101", {
+      description: description,
+      mimeType: media.type,
+      name: name,
+      version: "zora-20210101",
+    });
 
-    // const mediaBuffer = await getFileBuffer(media);
+    const mediaBuffer = await getFileBuffer(media);
 
-    // const contentHash = sha256FromBuffer(Buffer.from(mediaBuffer));
-    // const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON));
+    const contentHash = sha256FromBuffer(Buffer.from(mediaBuffer));
+    const metadataHash = sha256FromBuffer(Buffer.from(metadataJSON));
 
-    // let formData = new FormData();
-    // formData.append("media", media);
-    // formData.append("name", name);
-    // formData.append("metadata", metadataJSON);
+    let formData = new FormData();
+    formData.append("media", media);
+    formData.append("name", name);
+    formData.append("metadata", metadataJSON);
 
-    // const upload = await axios.post("/api/upload", formData, {
-    //   headers: {
-    //     "Content-Type": "multipart/form-data",
-    //   },
-    // });
-    // const { mediaCID, metadataCID } = upload.data;
-    // const mediaUrl = `ipfs://${mediaCID}`;
-    // const metadataUrl = `ipfs://${metadataCID}`;
+    const upload = await axios.post("/api/upload", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+    const { mediaCID, metadataCID } = upload.data;
+    const mediaUrl = `https://${mediaCID}.ipfs.dweb.link`;
+    const metadataUrl = `https://${metadataCID}.ipfs.dweb.link`;
 
-    // const mediaData = constructMediaData(
-    //   mediaUrl,
-    //   metadataUrl,
-    //   contentHash,
-    //   metadataHash
-    // );
-
-    // const bidShares = constructBidShares(
-    //   parseInt(royalty),
-    //   100 - parseInt(royalty),
-    //   parseFloat(fee)
-    // );
-
-    const factory = await new ethers.Contract(
-      "0xbdFBbB1aBA2C5b3C3038219C5FBf70556bcCd300",
-      abi,
-      provider
+    const mediaData = constructMediaData(
+      mediaUrl,
+      metadataUrl,
+      contentHash,
+      metadataHash
     );
 
-    console.log(factory);
+    const bidShares = constructBidShares(
+      parseInt(royalty),
+      100 - parseInt(royalty),
+      0
+    );
 
-    const zora = new Zora(factory, network.chainId);
-    // // Make transaction
-    // const tx = await zora.mint(mediaData, bidShares);
-    // await tx.wait(1); // Wait 1 confirmation and throw user to next screen
+    const tx = await zora.mint(mediaData, bidShares);
+    await tx.wait(1);
+
+    //   const factory = await new ethers.Contract(
+    //     "0xbdFBbB1aBA2C5b3C3038219C5FBf70556bcCd300",
+    //     abi,
+    //     signer
+    //   );
+
+    //   const collaborators = [];
+    //   const shares = [];
+
+    //   for (let i = 0; i < royalties.length; i++) {
+    //     collaborators.push(royalties[i].collaborator);
+    //     shares.push(royalties[i].shares);
+    //   }
+
+    //   await factory.createOurzPaymentSplitter(collaborators, shares);
+    //   const paymentSplitterContracts = await factory.getOurzPaymentSplittersByCollaborator(
+    //     collaborators[0]
+    //   );
+    //   console.log(paymentSplitterContracts);
+    //   const newestContract =
+    //     paymentSplitterContracts[paymentSplitterContracts.length - 1];
+
+    //   const eipSig = await createEipSig(newestContract);
+    //   console.log(eipSig);
+    //   const tx = await zora.mintWithSig(
+    //     address,
+    //     mediaData,
+    //     bidShares,
+    //     eipSig
+    //   );
+    //   await tx.wait(1);
   };
+
+
 
   // On load events
   useEffect(setupWeb3Modal, []);
@@ -139,6 +183,7 @@ function useWeb3() {
     mintMedia,
     authenticate,
     disconnect,
+    zora,
   };
 }
 
