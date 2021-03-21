@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { useWeb3React } from "@web3-react/core";
+import web3 from "./../containers/web3";
 import Wallet from "./Wallet";
 
 const Navbar = () => {
-  const { account, active } = useWeb3React();
+  const { address } = web3.useContainer();
 
   return (
     <div className="container flex justify-between items-center p-5 mx-auto border-b">
@@ -12,8 +12,8 @@ const Navbar = () => {
           OURZ
         </a>
       </Link>
-      {active && (
-        <Link href={`/${account}`}>
+      {address && (
+        <Link href={`/${address}`}>
           <a className="font-bold text-2xl text-center">Your Creations</a>
         </Link>
       )}

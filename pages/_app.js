@@ -1,16 +1,11 @@
 import "../styles/globals.css";
-import { Web3ReactProvider } from "@web3-react/core";
-import Web3 from "web3";
-
-const getLibrary = (provider) => {
-  return new Web3(provider);
-};
+import GlobalProvider from "./../containers/index";
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Web3ReactProvider getLibrary={getLibrary}>
+    <GlobalProvider>
       <Component {...pageProps} />
-    </Web3ReactProvider>
+    </GlobalProvider>
   );
 }
 

@@ -6,8 +6,9 @@ module.exports = {
   },
   variants: {
     extend: {
-      ringWidth: ["hover"],
-      ringColor: ["hover"]
+      ringWidth: ["hover", "disabled"],
+      ringColor: ["hover"],
+      backgroundColor: ["disabled"]
     },
   },
   plugins: [],

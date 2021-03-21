@@ -1,24 +1,24 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useWeb3React } from "@web3-react/core";
-import { injected } from "../hooks";
+import web3 from "./../containers/web3";
 
 const Wallet = () => {
-  const { account, activate, active, deactivate } = useWeb3React();
   const router = useRouter();
+  const { address, authenticate, disconnect } = web3.useContainer();
+  console.log(address);
 
-  const handleActivate = () => {
-    activate(injected);
+  const handleActivate = async () => {
+    await authenticate();
   };
 
-  const handleDeactivate = () => {
-    deactivate(injected);
+  const handleDeactivate = async () => {
     router.push("/");
+    await disconnect();
   };
 
-  return active ? (
+  return address ? (
     <div>
-      <Link href={`/${account}/mint`}>
+      <Link href={`/${address}/mint`}>
         <a className="mr-10 py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200">
           Create
         </a>
