@@ -19,16 +19,17 @@ const Wallet = () => {
   return address ? (
     <div>
       <Link href={`/${address}/mint`}>
-        <a className="mr-10 py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200">
+        <a className="createButton">
+          {/*mr-10 py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200*/}
           Create
         </a>
       </Link>
-      <button
+      {/*<button
         className="py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200"
         onClick={handleDeactivate}
       >
         Disconnect Wallet
-      </button>
+      </button>*/}
     </div>
   ) : (
     <button

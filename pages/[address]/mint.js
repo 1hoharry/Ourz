@@ -46,7 +46,7 @@ const Mint = () => {
       <div className="w-1/2 mt-20 container mx-auto">
         <form onSubmit={handleSubmit(onSubmit)}>
           <section className="p-6 border rounded">
-            <h3 className="font-bold text-2xl">Create New NFT</h3>
+            <h3 className="font-bold text-2xl">NFT Creation</h3>
 
             <div
               {...getRootProps({
@@ -65,17 +65,17 @@ const Mint = () => {
 
             <div className="mt-5">
               <label htmlFor="name" className="block font-bold">
-                Name
+                Title
               </label>
               <input
                 type="text"
                 id="name"
                 name="name"
                 ref={register({ required: true })}
-                placeholder="Enter a Name..."
+                placeholder="Enter Title"
                 className="w-full mt-2 p-3 border rounded border-gray-300 shadow"
               />
-              {errors.name && <Error>Name field is required.</Error>}
+              {errors.name && <Error>A Title is required.</Error>}
             </div>
             <div className="mt-10">
               <label htmlFor="description" className="block font-bold">
@@ -85,7 +85,7 @@ const Mint = () => {
                 id="description"
                 name="description"
                 ref={register}
-                placeholder="Enter a Description..."
+                placeholder="Enter Description"
                 className="w-full mt-2 p-3 border rounded border-gray-300 shadow"
               />
             </div>

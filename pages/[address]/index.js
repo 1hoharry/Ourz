@@ -32,10 +32,10 @@ const NFTGallery = () => {
 
   return (
     <div className="relative pb-96">
-      <Navbar />
+      <Navbar className="navbar"/>
       <div className="container mx-auto">
-        <div className="w-8/12 mb-48">
-          <h1 className="mt-32 font-bold text-4xl">
+        <div className="mb-48">
+          <h1 className="mt-32 italic text-xl text-center">
             Any NFTs you have minted will be shown here.
           </h1>
         </div>
@@ -52,7 +52,7 @@ const NFTGallery = () => {
         {/* map over all token ids/addresses owned by this address */}
         {/* on hover make item bigger */}
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </div>
   );
 };

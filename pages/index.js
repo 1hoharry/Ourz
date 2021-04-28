@@ -5,31 +5,31 @@ import Card from "../components/Card";
 const Home = () => {
   return (
     <div className="relative pb-96">
-      <Navbar />
+      <Navbar className="navbar" />
       <div className="container mx-auto">
-        <div className="w-8/12 mb-48">
-          <h1 className="mt-32 font-bold text-4xl">
+        <div className="mb-50">
+          <h1 className="text-center mt-32 font-bold text-6xl pb-2 tracking-wide">
             <p>
-              Welcome to OURZ.art
-            </p>
-            <p>
-              We built this website so artists (and any co-creators) can mint NFTs, split royalties, and display them on their own websites.
+              OURZ
             </p>
           </h1>
-          <h3 className="mt-5 font-bold text-xl text-gray-500">
-            <p>
-              <em>Empowering artists, and their collaborators.</em>
+          <h2 className="text-center">
+            <p className="font-bold text-3x1 pb-20 tracking-widest">
+              Because Art Is Collaborative
             </p>
-            <p>
-              <em>Built on ZORA.</em>
+            <p className="pb-4">
+              We built this website so artists (and any co-creators) can mint NFTs, <br></br> split royalties, and display them on their own websites.
             </p>
-          </h3>
+            <p className="font-bold text-sm">
+              Coming Soon <sup>TM</sup>
+            </p>
+          </h2>
         </div>
-        <Card
+        {/*/*<Card
           header="~10 NFTs"
           text="Minted on OURZ"
           add="Since March 2021"
-        />
+        />*/}
       </div>
       <Footer />
     </div>
