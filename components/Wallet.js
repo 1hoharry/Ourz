@@ -33,7 +33,7 @@ const Wallet = () => {
     </div>
   ) : (
     <button
-      className="py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200"
+      className="py-2 px-4 border rounded-lg bg-black font-bold text-white hover:ring-4 hover:ring-gray-600 transition duration-200 hidden md:block"
       onClick={handleActivate}
     >
       Connect Wallet
