@@ -19,6 +19,12 @@ todo:
     need to watch some more videos on css positioning cuz this shit still doesnt make sense
     also need to learn more about react const, and how to tie that to a back end.
 
+    use mintfund api for a kind of patreon? holders of nfts are subscribed and can view your content, maybe poap or something? idk.
+
+    apparently a pull payment is the best way to go about an artist recieving royalties - according to openzeppelin and consensys. does zora do this?
+    for UI and zora minting compatability: The metadata uri must be prefixed with https:// or at mint time the sdk will reject it.
+    How to check for this on webform?
+
 from aidan on zora discord
     @thomastraum  So for example, this query would get everything I've minted on Zora (just 1 thing so far), with the data I'd need to display on my own website
 {
