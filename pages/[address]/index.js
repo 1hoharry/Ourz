@@ -1,60 +1,125 @@
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
-import { NFTE } from "@nfte/react";
+import Head from "next/head"; // Head meta
+import client from "../../data/index"; // GraphQL client
+import Post from "../../components/Post"; // Post component
+import Layout from "../../components/Layout"; // Layout wrapper
+import { useState, useEffect } from "react"; // State management
+import { getPostByID } from "../../data/functions"; // Post retrieval function
+import makeBlockie from "ethereum-blockies-base64"; // Ethereum avatar
+import { ZORA_MEDIA_BY_OWNER } from "../../data/queries"; // Retrieval query
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
-import web3 from "./../../containers/web3";
+import web3 from "../../containers/web3";
 
-const NFTGallery = () => {
-  const router = useRouter();
-  const { zora } = web3.useContainer();
-  const { address } = router.query;
-  const [tokenIds, setTokenIds] = useState([]);
+export default function Profile({ address }) {
+  const [posts, setPosts] = useState([]); // Posts array
+  const [loading, setLoading] = useState(true); // Global loading state
 
-  console.log(tokenIds);
+  /**
+   * Collect owned media by address on load
+   */
+  const collectOwnedMedia = async () => {
+    // Collect all postIDs by owner
+    const allPosts = await client.request(
+      ZORA_MEDIA_BY_OWNER(address.toLowerCase())
+    );
 
-  const mediaIds = async () => {
-    console.log(zora);
-    if (zora) {
-      let balance = await zora.fetchBalanceOf(address);
-      balance = parseInt(balance);
-      console.log(balance);
-      for (let i = 0; i < balance; i++) {
-        const mediaId = await zora.fetchMediaOfOwnerByIndex(address, i);
-        setTokenIds([...tokenIds, mediaId]);
+    let ownedMedia = [];
+    // For all owned posts
+    for (let i = 0; i < allPosts.medias.length; i++) {
+      // Colelct postID
+      const postID = allPosts.medias[i].id;
+
+      // FIXME: hardcoded fix for /dev/null lmao
+      if (postID !== "2") {
+        // Collect post
+        const post = await getPostByID(allPosts.medias[i].id);
+        // Push post to ownedMedia
+        ownedMedia.push(post);
       }
     }
+
+    setPosts([...ownedMedia.reverse()]); // Update owned posts (reversed for newest first)
+    setLoading(false); // Toggle loading
   };
 
-  useEffect(() => {
-    mediaIds();
-  }, []);
+  // Collect owned media on load
+  useEffect(collectOwnedMedia, [address]);
 
   return (
-    <div className="relative pb-96">
-      <Navbar className="navbar"/>
-      <div className="container mx-auto">
-        <div className="mb-48">
-          <h1 className="mt-32 italic text-xl text-center">
-            Any NFTs you have minted will be shown here.
-          </h1>
+    <Layout>
+      <Head>
+        {/* Custom meta for profile */}
+        <meta
+          property="og:image"
+          content={`https://zora.gallery/api/meta/profile?address=${address}`}
+        />
+        <meta
+          property="twitter:image"
+          content={`https://zora.gallery/api/meta/profile?address=${address}`}
+        />
+      </Head>
+
+      <div>
+        {/* Profile header */}
+        <div>
+          {/* Avatar */}
+          <img src={makeBlockie(address)} alt="Avatar" />
+
+          {/* Name/Address */}
+          <h3>{address.toLowerCase()}</h3>
+
+          {/* Etherscan link */}
+          <a
+            href={`https://etherscan.io/address/${address}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Etherscan
+          </a>
         </div>
       </div>
-      <div className="grid grid-cols-4 gap-10">
-        {/* <NFTE
-          contract="0x7C2668BD0D3c050703CEcC956C11Bd520c26f7d4"
-          tokenId="2019"
-        />
-                <NFTE
-          contract="0x7C2668BD0D3c050703CEcC956C11Bd520c26f7d4"
-          tokenId="2020"
-        /> */}
-        {/* map over all token ids/addresses owned by this address */}
-        {/* on hover make item bigger */}
-      </div>
-      {/* <Footer /> */}
-    </div>
-  );
-};
 
-export default NFTGallery;
+      {loading ? (
+        // If loading state, show loading
+        <div>
+          <span>Loading...</span>
+        </div>
+      ) : posts.length > 0 ? (
+        // Else if, post count > 0
+        <div>
+          {posts.map((post, i) => {
+            // For each Zora post
+            return (
+              // Return Post component
+              <Post
+                key={i}
+                creatorAddress={post.creator.id}
+                ownerAddress={post.owner.id}
+                createdAtTimestamp={post.createdAtTimestamp}
+                mimeType={post.metadata.mimeType}
+                contentURI={post.contentURI}
+                name={post.metadata.name}
+              />
+            );
+          })}
+        </div>
+      ) : (
+        // Else, if not loading and post count !> 0, return no owned media
+        <div>
+          <span>No owned media.</span>
+        </div>
+      )}
+    </Layout>
+  );
+}
+
+// Run on page load
+export async function getServerSideProps({ params }) {
+  // Return address
+  return {
+    // As prop
+    props: {
+      address: params.address,
+    },
+  };
+}

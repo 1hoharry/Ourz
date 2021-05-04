@@ -20,5 +20,5 @@ contract OurzPaymentSplitterFactory {
 }
 
 contract OurzPaymentSplitter is PaymentSplitter {
-    constructor(address[] memory _payees, uint256[] memory _shares) PaymentSplitter(_payees, _shares) {}
+    constructor(address[] memory _payees, uint256[] memory _shares) PaymentSplitter(_payees, _shares) public {}
 }

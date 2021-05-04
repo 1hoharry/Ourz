@@ -8,10 +8,14 @@ const readFileAsync = promisify(fs.readFile);
 const handler = async (req, res) => {
   const form = new formidable.IncomingForm({ keepExtensions: true });
 
+  console.log("line11");
+
   const data = await new Promise((res, rej) => {
     form.parse(req, (err, fields, files) => {
       if (err) return rej(err);
+      console.log("line16");
       res({ fields, files });
+      console.log("line18");
     });
   });
 

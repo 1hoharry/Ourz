@@ -14,6 +14,8 @@ import { useState, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { abi } from "../ethereum/abis/OurzPaymentSplitterFactory.json";
+//import { abi } from "../ethereum/abis/Media.json"
+//import { abi } from "../ethereum/abis/Market.json"
 
 const providerOptions = {
   walletconnect: {
@@ -23,6 +25,11 @@ const providerOptions = {
     },
   },
 };
+
+// local blockchain
+//const wallet = Wallet.createRandom()
+//const zora = new Zora(wallet, 50, Media.deployed(), Market.deployed())
+//await zora.totalSupply()
 
 function useWeb3() {
   const [zora, setZora] = useState(null);
@@ -120,6 +127,7 @@ function useWeb3() {
         "Content-Type": "multipart/form-data",
       },
     });
+    
     const { mediaCID, metadataCID } = upload.data;
     const mediaUrl = `https://${mediaCID}.ipfs.dweb.link`;
     const metadataUrl = `https://${metadataCID}.ipfs.dweb.link`;
